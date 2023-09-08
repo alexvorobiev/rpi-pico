@@ -1,0 +1,3 @@
+[submodule "micropython-mode"]
+	path = micropython-mode
+	url = git@github.com:alexvorobiev/micropython-mode.git
