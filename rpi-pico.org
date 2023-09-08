@@ -1,0 +1,118 @@
+#+TITLE: Raspberry Pi Pico W  with Waveshare motor driver in NixOS WSL
+#+STARTUP: inlineimages
+#+last_modified: 2023-08-29 22:17:48 alex
+* RPi Pico W
+** Resources
+- https://www.twilio.com/blog/programming-raspberry-pi-pico-microcontroller-micropython
+-
+- https://micropython.org/download/RPI_PICO_W
+- https://github.com/dhylands/rshell
+** Install MicroPython
+New Pico will connect as Windows drive. Download the lastest =.uf2=  from https://micropython.org/download/RPI_PICO_W and copy it to the Pico drive. It will reboot automatically. Note, Pico and Pico W use different MicroPython package.
+** USBIP
+#+name: busid
+#+begin_src sh :results output
+  /mnt/c/Program\ Files/usbipd-win/usbipd.exe wsl list | \
+      grep 'USB Serial Device' | \
+      sed -E 's/^([0-9]+-[0-9]+).*/\1/'
+#+end_src
+
+#+RESULTS: busid
+: 1-2
+
+#+begin_src sh :var busid=busid
+  wsl-sudo /mnt/c/Program\ Files/usbipd-win/usbipd.exe wsl attach --busid $busid
+#+end_src
+
+#+RESULTS:
+
+#+begin_src sh :results verbatim
+  lsusb | grep MicroPython
+#+end_src
+
+#+RESULTS:
+: Bus 001 Device 005: ID 2e8a:0005 MicroPython Board in FS mode
+** rshell
+#+begin_src emacs-lisp
+  (add-hook 'comint-rshell-hook
+            #'(lambda () (setq comint-process-echoes t)))
+
+  (comint-run "rshell" '("-p" "/dev/ttyACM0" "--buffer-size" "512"))
+#+end_src
+
+#+RESULTS:
+So that  the =*this*= variable works in the blocks below (https://emacs.stackexchange.com/a/53680)
+#+begin_src emacs-lisp
+  (advice-add
+   'org-babel-ref-resolve
+   :around (lambda (fun ref)
+             (if (stringp ref)
+                 (funcall fun ref)
+               (eval ref))))
+#+end_src
+
+#+RESULTS:
+
+#+begin_src sh :session *rshell* :results output :post '(ansi-color-apply *this*)
+  help
+#+end_src
+
+#+RESULTS:
+: <topic>):
+: ========================================
+: args    cat  connect  date  edit  filesize  help  mkdir  rm     shell
+: boards  cd   cp       echo  exit  filetype  ls    repl   rsync
+:
+: Use Control-D (or the exit command) to exit rshell.
+: /home/alex/src/rpi-pico> org_babel_sh_eoe
+
+#+begin_src python :session *rshell*
+  repl
+#+end_src
+
+#+begin_src python :session *Python*
+  led.on()
+  return 0
+#+end_src
+** Emacs micorpython mode
+https://github.com/picospuch/micropython-mode
+#+begin_src emacs-lisp
+  (add-to-list 'lsp-language-id-configuration '(micropython-mode . "python"))
+#+end_src
+* Waveshare Motor Driver
+** Resources
+- https://www.waveshare.com/wiki/Pico-Motor-Driver
+- wget  https://www.waveshare.com/w/upload/5/5c/Pico-Motor-Driver-code.7z
+** Demo code
+#+begin_src sh
+  wget https://www.waveshare.com/w/upload/5/5c/Pico-Motor-Driver-code.7z
+#+end_src
+
+#+RESULTS:
+#+begin_src sh :results raw
+  7z x Pico-Motor-Driver-code.7z -o./Pico-Motor-Driver-code
+#+end_src
+
+#+RESULTS:
+
+7-Zip [64] 17.05 : Copyright (c) 1999-2021 Igor Pavlov : 2017-08-28
+p7zip Version 17.05 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,64 bits,8 CPUs x64)
+
+Scanning the drive for archives:
+1 file, 1633 bytes (2 KiB)
+
+Extracting archive: Pico-Motor-Driver-code.7z
+--
+Path = Pico-Motor-Driver-code.7z
+Type = 7z
+Physical Size = 1633
+Headers Size = 148
+Method = LZMA2:6k
+Solid = -
+Blocks = 1
+
+Everything is Ok
+
+Size:       5290
+Compressed: 1633
+**
