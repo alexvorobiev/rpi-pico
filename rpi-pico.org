@@ -1,6 +1,6 @@
 #+TITLE: Raspberry Pi Pico W  with Waveshare motor driver in NixOS WSL
 #+STARTUP: inlineimages
-#+last_modified: 2023-08-29 22:17:48 alex
+#+last_modified: 2023-09-16 23:09:56 alex
 * RPi Pico W
 ** Resources
 - https://www.twilio.com/blog/programming-raspberry-pi-pico-microcontroller-micropython
@@ -18,9 +18,9 @@ New Pico will connect as Windows drive. Download the lastest =.uf2=  from https:
 #+end_src
 
 #+RESULTS: busid
-: 1-2
+: 1-1
 
-#+begin_src sh :var busid=busid
+#+begin_src sh :var busid=busid :results output
   wsl-sudo /mnt/c/Program\ Files/usbipd-win/usbipd.exe wsl attach --busid $busid
 #+end_src
 
@@ -31,7 +31,7 @@ New Pico will connect as Windows drive. Download the lastest =.uf2=  from https:
 #+end_src
 
 #+RESULTS:
-: Bus 001 Device 005: ID 2e8a:0005 MicroPython Board in FS mode
+: Bus 001 Device 002: ID 2e8a:0005 MicroPython Board in FS mode
 ** rshell
 #+begin_src emacs-lisp
   (add-hook 'comint-rshell-hook
@@ -70,6 +70,7 @@ So that  the =*this*= variable works in the blocks below (https://emacs.stackexc
   repl
 #+end_src
 
+This hangs...
 #+begin_src python :session *Python*
   led.on()
   return 0
@@ -77,13 +78,33 @@ So that  the =*this*= variable works in the blocks below (https://emacs.stackexc
 ** Emacs micorpython mode
 https://github.com/picospuch/micropython-mode
 #+begin_src emacs-lisp
-  (add-to-list 'lsp-language-id-configuration '(micropython-mode . "python"))
+  (use-package micropython-mode
+    :load-path "/home/alex/src/rpi-pico/micropython-mode"
+    :config
+    (add-hook 'micropython-mode-hook
+              #'(lambda ()
+                  (setq-local python-shell-interpreter "picocom")
+                  (setq-local python-shell-interpreter-args "-b 115200 /dev/ttyACM0")))
+    (add-hook 'lsp-mode-hook
+              #'(lambda ()
+                  (add-to-list 'lsp-language-id-configuration '(micropython-mode . "python")))))
 #+end_src
+
+#+RESULTS:
+: t
+
 * Waveshare Motor Driver
+- I2C controlled, supports 32x different I2C addresses by setting the 5 address jumpers
+- Onboard PCA9685 chip, provides 12-bit hardware PWM to adjust motor speed
+- Onboard TB6612FNG dual H-bridge motor driver
+- Integrates 5V regulator, up to 3A output current, can be powered from a battery through the VIN terminal
+- Breaks out unused pins of the Pico for easy extension
 ** Resources
 - https://www.waveshare.com/wiki/Pico-Motor-Driver
 - wget  https://www.waveshare.com/w/upload/5/5c/Pico-Motor-Driver-code.7z
-** Demo code
+- http://wiki.sunfounder.cc/index.php?title=PCA9685_16_Channel_12_Bit_PWM_Servo_Driver
+-
+** Download Demo code
 #+begin_src sh
   wget https://www.waveshare.com/w/upload/5/5c/Pico-Motor-Driver-code.7z
 #+end_src
