@@ -1,12 +1,30 @@
 #+TITLE: Raspberry Pi Pico W  with Waveshare motor driver in NixOS WSL
 #+STARTUP: inlineimages
-#+last_modified: 2023-09-16 23:09:56 alex
+#+options: toc:2
+#+last_modified: 2023-09-18 20:46:57 alex
+
+* Table of contents                                                     :TOC:
+- [[#the-project][The project]]
+- [[#rpi-pico-w][RPi Pico W]]
+  - [[#resources][Resources]]
+  - [[#install-micropython][Install MicroPython]]
+  - [[#usbip][USBIP]]
+  - [[#rshell][rshell]]
+  - [[#emacs-micorpython-mode][Emacs micorpython mode]]
+- [[#waveshare-motor-driver][Waveshare Motor Driver]]
+  - [[#resources-1][Resources]]
+  - [[#download-demo-code][Download Demo code]]
+- [[#additional-motor-driver-sparkfun-tb6612fng][Additional motor driver Sparkfun TB6612FNG]]
+  - [[#resources-2][Resources]]
+
+* The project
+The goal is to control a toy robotic arm (5 DC motors plus LED) with Raspberry Pi Pico W. The arm looks like a clone of https://www.velleman.eu/products/view/?id=375310 which in turn looks identical to a no-name set from AliExpress. Curiously there is an add-on to control it over USB (https://www.velleman.eu/products/view/?id=436330),  so I am basically creating a "smart" (the code runs on Pico instead of the PC) version of that that.
 * RPi Pico W
 ** Resources
 - https://www.twilio.com/blog/programming-raspberry-pi-pico-microcontroller-micropython
--
 - https://micropython.org/download/RPI_PICO_W
 - https://github.com/dhylands/rshell
+- https://docs.micropython.org/en/latest/
 ** Install MicroPython
 New Pico will connect as Windows drive. Download the lastest =.uf2=  from https://micropython.org/download/RPI_PICO_W and copy it to the Pico drive. It will reboot automatically. Note, Pico and Pico W use different MicroPython package.
 ** USBIP
@@ -137,3 +155,7 @@ Everything is Ok
 Size:       5290
 Compressed: 1633
 **
+* Additional motor driver Sparkfun TB6612FNG
+Waveshare only supports four motors. A separate TB6612FNG-based driver will control the fifth motor
+** Resources
+- https://www.instructables.com/Driving-Small-Motors-With-the-TB6612FNG/
