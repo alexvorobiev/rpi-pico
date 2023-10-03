@@ -1,7 +1,7 @@
 #+TITLE: Raspberry Pi Pico W  with Waveshare motor driver in NixOS WSL
 #+STARTUP: inlineimages
 #+options: toc:2
-#+last_modified: 2023-09-18 20:46:57 alex
+#+last_modified: 2023-10-02 22:43:24 alex
 
 * Table of contents                                                     :TOC:
 - [[#the-project][The project]]
@@ -18,7 +18,7 @@
   - [[#resources-2][Resources]]
 
 * The project
-The goal is to control a toy robotic arm (5 DC motors plus LED) with Raspberry Pi Pico W. The arm looks like a clone of https://www.velleman.eu/products/view/?id=375310 which in turn looks identical to a no-name set from AliExpress. Curiously there is an add-on to control it over USB (https://www.velleman.eu/products/view/?id=436330),  so I am basically creating a "smart" (the code runs on Pico instead of the PC) version of that that.
+The goal is to control a toy robotic arm (5 DC motors plus LED) with Raspberry Pi Pico W. The arm is sold under different names (e.g. https://www.velleman.eu/products/view/?id=375310,  https://owirobot.com/robotic-arm-edge) but it also can be found  as a no-name set on AliExpress. There is an add-on to control it over USB (https://www.velleman.eu/products/view/?id=436330),  so I am basically creating a "smart") (the code runs on Pico instead of the PC) version of that that.
 * RPi Pico W
 ** Resources
 - https://www.twilio.com/blog/programming-raspberry-pi-pico-microcontroller-micropython
