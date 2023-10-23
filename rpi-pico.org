@@ -1,7 +1,7 @@
 #+TITLE: Raspberry Pi Pico W  with Waveshare motor driver in NixOS WSL
 #+STARTUP: inlineimages
 #+options: toc:2
-#+last_modified: 2023-10-02 22:43:24 alex
+#+last_modified: 2023-10-04 22:16:42 alex
 
 * Table of contents                                                     :TOC:
 - [[#the-project][The project]]
@@ -16,6 +16,8 @@
   - [[#download-demo-code][Download Demo code]]
 - [[#additional-motor-driver-sparkfun-tb6612fng][Additional motor driver Sparkfun TB6612FNG]]
   - [[#resources-2][Resources]]
+- [[#wifi][WiFi]]
+  - [[#resources-3][Resources]]
 
 * The project
 The goal is to control a toy robotic arm (5 DC motors plus LED) with Raspberry Pi Pico W. The arm is sold under different names (e.g. https://www.velleman.eu/products/view/?id=375310,  https://owirobot.com/robotic-arm-edge) but it also can be found  as a no-name set on AliExpress. There is an add-on to control it over USB (https://www.velleman.eu/products/view/?id=436330),  so I am basically creating a "smart") (the code runs on Pico instead of the PC) version of that that.
@@ -25,6 +27,8 @@ The goal is to control a toy robotic arm (5 DC motors plus LED) with Raspberry P
 - https://micropython.org/download/RPI_PICO_W
 - https://github.com/dhylands/rshell
 - https://docs.micropython.org/en/latest/
+- https://microcontrollerslab.com/dual-core-raspberry-pi-pico-programming-micropython/
+
 ** Install MicroPython
 New Pico will connect as Windows drive. Download the lastest =.uf2=  from https://micropython.org/download/RPI_PICO_W and copy it to the Pico drive. It will reboot automatically. Note, Pico and Pico W use different MicroPython package.
 ** USBIP
@@ -159,3 +163,9 @@ Compressed: 1633
 Waveshare only supports four motors. A separate TB6612FNG-based driver will control the fifth motor
 ** Resources
 - https://www.instructables.com/Driving-Small-Motors-With-the-TB6612FNG/
+
+* WiFi
+Enabling the wireless chip
+
+** Resources
+- https://youtu.be/fqsOZ_FVgfg

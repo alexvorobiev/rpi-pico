@@ -115,10 +115,40 @@ class MotorDriver():
         self.pwm.setLevel(self.MotorPin[mPin+2], 0)
         self.pwm.setLevel(self.MotorPin[mPin+3], 0)
     #
-    def MotorStop(self, motor):
+    def motorStop(self, motor):
+        """
+        Stop the motor.
+
+        Parameters
+        ----------
+        motor: string
+            The motor name (MA, MB, MC, MD).
+
+        """
         mPin = self.MotorPin.index(motor)
         self.pwm.setServoPulse(self.MotorPin[mPin+1], 0)
-#
+        self.pwm.setLevel(self.MotorPin[mPin+2], 0)
+        self.pwm.setLevel(self.MotorPin[mPin+3], 0)
+    #
+    def motorStart(self, motor, speed):
+        """
+        Start the motor.
+
+        Parameters
+        ----------
+        motor: string
+            The motor name (MA, MB, MC, MD).
+        speed: number
+            The speed in %. The sign determines the direction.
+
+        """
+        mPin = self.MotorPin.index(motor)
+        self.pwm.setServoPulse(self.MotorPin[mPin+1], abs(speed))
+
+        fwd = speed >= 0
+        self.pwm.setLevel(self.MotorPin[mPin+2], 0 if fwd else 1)
+        self.pwm.setLevel(self.MotorPin[mPin+3], 1 if fwd else 0)
+
 #
 if __name__ == '__main__':
     m = MotorDriver()
