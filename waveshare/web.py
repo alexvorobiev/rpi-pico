@@ -60,8 +60,6 @@ print('IP-adress: ' + status[0])
 
 m = p.MotorDriver()
 
-
-ipAddress = status[0]
 addr = socket.getaddrinfo('0.0.0.0', 80)[0][-1]
 s = socket.socket()
 s.bind(addr)
@@ -72,29 +70,32 @@ while True:
         print('Connection from ', addr, "accepted!")
 
         request = cl.recv(1024)
-        request = str(request)
+        request = str(request, 'utf-8')
         print(request)
 
-        if request.find('/led/one') == 6:
-            led_one.toggle()
+        # if request.find('/led/one') == 6:
+        #     led_one.toggle()
 
-        if request.find('/led/two') == 6:
-            led_two.toggle()
+        # if request.find('/led/two') == 6:
+        #     led_two.toggle()
 
-        if request.find('/on') == 6:
+        if request.find('/on/') >= 0:
             # then /MA, etc.
-            motor = request[-2:]
+            motor = request[8:10]
+            print("Start motor "+motor)
             if motor in {'MA', 'MB', 'MC', 'MD'}:
                 m.motorStart(motor, 100)
 
-        if request.find('/off') == 6:
+        if request.find('/off/') >= 0:
             # then /MA, etc.
-            motor = request[-2:]
+            motor = request[9:11]
+            print("Stop motor "+motor)
             if motor in {'MA', 'MB', 'MC', 'MD'}:
                 m.motorStop(motor)
 
-        cl.send('HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n')
-        cl.send(Website())
+        cl.send('HTTP/1.0 200 OK\r\n')
+        # cl.send('Content-type: text/html\r\n\r\n')
+        # cl.send(Website())
         cl.close()
     except OSError as e:
         cl.close()
