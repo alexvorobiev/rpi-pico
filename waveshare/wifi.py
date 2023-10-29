@@ -1,3 +1,4 @@
+from time import sleep
 import network
 
 # https://docs.micropython.org/en/latest/library/network.WLAN.html

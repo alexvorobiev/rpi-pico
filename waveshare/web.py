@@ -9,6 +9,8 @@ import wifi
 
 # led_one = Pin(14, Pin.OUT)
 # led_two = Pin(15, Pin.OUT)
+def parseRequest(s):
+    return {k:v for k, v in [tuple(x.split('=', 1)) for x in s[(s.find('?') + 1):s.find(' HTTP')].split('&')]}
 
 def Website():
     value_one = led_one.value()
@@ -59,6 +61,7 @@ status = wifi.connect(secrets.SSID, secrets.PASSWORD)
 print('IP-adress: ' + status[0])
 
 m = p.MotorDriver()
+name = 'default'
 
 addr = socket.getaddrinfo('0.0.0.0', 80)[0][-1]
 s = socket.socket()
@@ -73,25 +76,67 @@ while True:
         request = str(request, 'utf-8')
         print(request)
 
+        params = parseRequest(request)
+        print(params)
+
         # if request.find('/led/one') == 6:
         #     led_one.toggle()
 
         # if request.find('/led/two') == 6:
         #     led_two.toggle()
 
-        if request.find('/on/') >= 0:
-            # then /MA, etc.
-            motor = request[8:10]
-            print("Start motor "+motor)
-            if motor in {'MA', 'MB', 'MC', 'MD'}:
-                m.motorStart(motor, 100)
+        if request.find('/on?') >= 0:
+            # then motor=MA&speed=50, etc.
+            if 'motor' not in params or 'speed' not in params:
+                print("Both motor and speed are needed")
 
-        if request.find('/off/') >= 0:
-            # then /MA, etc.
-            motor = request[9:11]
-            print("Stop motor "+motor)
-            if motor in {'MA', 'MB', 'MC', 'MD'}:
-                m.motorStop(motor)
+            elif params['motor'] not in {'MA', 'MB', 'MC', 'MD'}:
+                print("Motor should be one of MA, MB, MC, MD")
+
+            else:
+                speed = params['speed']
+                speedOk = True
+
+                try:
+                    speed = int(speed)
+                    speedOk = abs(speed) <= 100
+                except ValueError:
+                    speedOk = False
+
+                if not speedOk:
+                    print("Speed should be an integer -100..100")
+                else:
+                    print("Starting motor " + params['motor'] + ' speed ' + params['speed'])
+                    m.motorStart(params['motor'], speed)
+
+        if request.find('/off?') >= 0:
+            if 'motor' not in params:
+                print("Motor is needed")
+
+            elif params['motor'] not in {'MA', 'MB', 'MC', 'MD'}:
+                print("Motor should be one of MA, MB, MC, MD")
+
+            else:
+                print("Stop motor " + params['motor'])
+                m.motorStop(params['motor'])
+
+        if request.find('/begin?') >= 0:
+            if 'name' not in params:
+                name = 'default'
+
+            print("Starting recording as program " + name)
+
+        if request.find('/end?') >= 0:
+            print("Stopping recording as program " + name)
+
+        if request.find('/run?') >= 0:
+            if 'name' not in params:
+                name = 'default'
+
+            dir = 'forward'
+            if 'dir' not in params:
+                dir = 'forward'
+            print("Running program " + name + " " + dir)
 
         cl.send('HTTP/1.0 200 OK\r\n')
         # cl.send('Content-type: text/html\r\n\r\n')
