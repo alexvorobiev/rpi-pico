@@ -1,7 +1,7 @@
 #+TITLE: Raspberry Pi Pico W  with Waveshare motor driver in NixOS WSL
 #+STARTUP: inlineimages
 #+options: toc:2
-#+last_modified: 2023-10-04 22:16:42 alex
+#+last_modified: 2023-11-09 22:11:33 alex
 
 * Table of contents                                                     :TOC:
 - [[#the-project][The project]]
@@ -160,9 +160,12 @@ Size:       5290
 Compressed: 1633
 **
 * Additional motor driver Sparkfun TB6612FNG
-Waveshare only supports four motors. A separate TB6612FNG-based driver will control the fifth motor
+Waveshare only supports four motors. A separate TB6612FNG-based driver will control the fifth motor. The API is also PWM but unlike PCA9685 (which implements PWM in hardware), MicroPython's [[https://docs.micropython.org/en/latest/library/machine.PWM.html][machine.PWM]] class needs to be used.
 ** Resources
+- https://c2plabs.com/blog/2021/09/12/controlling-dc-motor-using-raspberry-pi-pico-rp2040-and-tb6612fng/
 - https://www.instructables.com/Driving-Small-Motors-With-the-TB6612FNG/
+- https://docs.micropython.org/en/latest/library/machine.PWM.html
+
 
 * WiFi
 Enabling the wireless chip

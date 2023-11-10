@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head> <title>Робот-манипулятор</title>
+    <style>
+      .button {
+          border: none;
+          color: white;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+      }
+
+      .button1 {background-color: #04AA6D;} /* Green */
+      .button2 {background-color: #008CBA;} /* Blue */
+      .button3 {background-color: #fa8072;} /* Red */
+    </style>
+  </head>
+  <body>
+    <h1>Робот-манипулятор</h1>
+
+    <table style="width:400px" class="center">
+      <tr>
+        <th><center>Motor </center></th>
+        <th><center>Forward </center> </th>
+        <th><center>Backward </center> </th>
+        <th><center>Off </center> </th>
+      </tr>
+      <tr>
+        <td><center>A </td>
+        <td><center><button class="button button1" onclick='forward("MA")'>&#x2BC8;</button></td>
+        <td><center><button class="button button2" onclick='backward("MA")'>&#x2BC7;</button></td>
+        <td><center><button class="button button3" onclick='off("MA")'>&#x2BC0;</button></td>
+      </tr>
+      <tr>
+        <td><center>B </td>
+        <td><center><button class="button button1" onclick='forward("MB")'>&#x2BC8;</button></td>
+        <td><center><button class="button button2" onclick='backward("MB")'>&#x2BC7;</button></td>
+        <td><center><button class="button button3" onclick='off("MB")'>&#x2BC0;</button></td>
+      </tr>
+      <tr>
+        <td><center>C </td>
+        <td><center><button class="button button1" onclick='forward("MC")'>&#x2BC8;</button></td>
+        <td><center><button class="button button2" onclick='backward("MC")'>&#x2BC7;</button></td>
+        <td><center><button class="button button3" onclick='off("MC")'>&#x2BC0;</button></td>
+      </tr>
+      <tr>
+        <td><center>D </td>
+        <td><center><button class="button button1" onclick='forward("MD")'>&#x2BC8;</button></td>
+        <td><center><button class="button button2" onclick='backward("MD")'>&#x2BC7;</button></td>
+        <td><center><button class="button button3" onclick='off("MD")'>&#x2BC0;</button></td>
+      </tr>
+
+    </table>
+
+    <!-- <input type='button' value='update' onclick='update()'/> -->
+
+    <script>
+      function forward(m){
+          var xhttp = new XMLHttpRequest();
+          xhttp.open('GET', '/on?motor='+m+'&speed=100', true);
+          xhttp.send();
+      }
+      function backward(m){
+          var xhttp = new XMLHttpRequest();
+          xhttp.open('GET', '/on?motor='+m+'&speed=-100', true);
+          xhttp.send();
+      }
+      function off(m){
+          var xhttp = new XMLHttpRequest();
+          xhttp.open('GET', '/off?motor='+m, true);
+          xhttp.send();
+      }
+      function update(){
+          location.reload(true);
+      }
+
+    </script>
+  </body>
+</html>
